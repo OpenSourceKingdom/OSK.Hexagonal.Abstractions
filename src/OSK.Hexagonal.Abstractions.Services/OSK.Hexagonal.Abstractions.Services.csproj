@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<Nullable>enable</Nullable>
+		<RepositoryUrl>https://github.com/OpenSourceKingdom/OSK.Hexagonal.Abstractions</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<Description>A set of base service implemenations for hexagonal libraries.</Description>
+		<PackageTags>OpenSourceKingdom, OpenSource, Abstractions, base, service, Hexagonal, Architecture, Port, Adapter</PackageTags>
+		<Authors>BlankDev117</Authors>
+		<Title>OSK.Hexagonal.Abstractions.Services</Title>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\OSK.Hexagonal.Abstractions\OSK.Hexagonal.Abstractions.csproj" />
+	</ItemGroup>
+
+</Project>
