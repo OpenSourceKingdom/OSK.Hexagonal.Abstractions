@@ -1,11 +1,12 @@
 ﻿using OSK.Functions.Outputs.Abstractions;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace OSK.Hexagonal.Abstractions
 {
     public interface IModelService<TId, TModel>
-        where TId: struct
+        where TId: struct, IEquatable<TId>
         where TModel: IModel<TId>
     {
         Task<IOutput<TModel>> CreateAsync(TModel model, CancellationToken cancellationToken = default);
