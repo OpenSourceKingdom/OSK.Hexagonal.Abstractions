@@ -17,7 +17,7 @@ namespace OSK.Hexagonal.Abstractions.Repositories
             var nextIdOutput = await GetNextIdAsync(tenantId, cancellationToken);
             if (!nextIdOutput.IsSuccessful)
             {
-                return nextIdOutput.AsType<TModel>();
+                return nextIdOutput.AsOutput<TModel>();
             }
 
             model.Id = nextIdOutput.Value;

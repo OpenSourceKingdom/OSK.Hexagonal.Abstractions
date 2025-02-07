@@ -10,6 +10,6 @@ namespace OSK.Hexagonal.Abstractions.Repositories
         where TModel : IModel<TId>
         where TFilter : GetListFilter
     {
-        public abstract Task<PaginatedOutput<TModel>> GetListAsync(TFilter filter, CancellationToken cancellationToken = default);
+        public abstract Task<IPaginatedOutput<TModel>> GetListAsync(TFilter filter, CancellationToken cancellationToken = default);
     }
 }
