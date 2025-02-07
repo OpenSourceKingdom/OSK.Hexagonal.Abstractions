@@ -40,13 +40,13 @@ namespace OSK.Hexagonal.Abstractions.Services
             var output = await MutateModelAsync(model, true, cancellationToken);
             if (!output.IsSuccessful)
             {
-                return output.AsType<TModel>();
+                return output.AsOutput<TModel>();
             }
 
             output = await ValidateForCreateAsync(model, cancellationToken);
             if (!output.IsSuccessful)
             {
-                return output.AsType<TModel>();
+                return output.AsOutput<TModel>();
             }
 
             var createdOutput = await Repository.CreateAsync(model, cancellationToken);
@@ -74,8 +74,8 @@ namespace OSK.Hexagonal.Abstractions.Services
                 return output;
             }
 
-            return output.Code.StatusCode == HttpStatusCode.NotFound
-                ? OutputFactory.Success() // if the id was not found, it was already successfully deleted
+            return output.StatusCode.SpecificityCode == OutputSpecificityCode.DataNotFound
+                ? OutputFactory.Succeed() // if the id was not found, it was already successfully deleted
                 : output;
         }
 
@@ -89,13 +89,13 @@ namespace OSK.Hexagonal.Abstractions.Services
             var output = await MutateModelAsync(model, false, cancellationToken);
             if (!output.IsSuccessful)
             {
-                return output.AsType<TModel>();
+                return output.AsOutput<TModel>();
             }
 
             output = await ValidateForUpdateAsync(model, cancellationToken);
             if (!output.IsSuccessful)
             {
-                return output.AsType<TModel>();
+                return output.AsOutput<TModel>();
             }
 
             var updatedOutput = await Repository.UpdateAsync(model, cancellationToken);
@@ -114,22 +114,22 @@ namespace OSK.Hexagonal.Abstractions.Services
 
         protected virtual ValueTask<IOutput> MutateModelAsync(TModel model, bool isNewModel, CancellationToken cancellationToken)
         {
-            return new ValueTask<IOutput>(OutputFactory.Success());
+            return new ValueTask<IOutput>(OutputFactory.Succeed());
         }
         
         protected virtual ValueTask<IOutput> ValidateForCreateAsync(TModel model, CancellationToken cancellationToken)
         {
-            return new ValueTask<IOutput>(OutputFactory.Success());
+            return new ValueTask<IOutput>(OutputFactory.Succeed());
         }
 
         protected virtual ValueTask<IOutput> ValidateForUpdateAsync(TModel model, CancellationToken cancellationToken)
         {
-            return new ValueTask<IOutput>(OutputFactory.Success());
+            return new ValueTask<IOutput>(OutputFactory.Succeed());
         }
 
         protected virtual ValueTask<IOutput> ValidateForDeleteAsync(TId id, CancellationToken cancellationToken)
         {
-            return new ValueTask<IOutput>(OutputFactory.Success());
+            return new ValueTask<IOutput>(OutputFactory.Succeed());
         }
 
         protected virtual ValueTask ProcessResourceCreationAsync(TModel model, CancellationToken cancellationToken)

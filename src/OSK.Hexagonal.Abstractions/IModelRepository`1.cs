@@ -10,6 +10,6 @@ namespace OSK.Hexagonal.Abstractions
         where TModel : IModel<TId>
         where TFilter : GetListFilter
     {
-        Task<PaginatedOutput<TModel>> GetListAsync(TFilter filter, CancellationToken cancellationToken = default);
+        Task<IPaginatedOutput<TModel>> GetListAsync(TFilter filter, CancellationToken cancellationToken = default);
     }
 }

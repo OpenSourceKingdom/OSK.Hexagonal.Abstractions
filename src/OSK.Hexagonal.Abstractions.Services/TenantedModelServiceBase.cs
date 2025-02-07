@@ -44,25 +44,25 @@ namespace OSK.Hexagonal.Abstractions.Services
             }
             if (!model.TenantId.Equals(tenantId))
             {
-                return OutputFactory.BadRequest<TModel>("Tenant id mismatch.", ApplicationId);
+                return OutputFactory.Fail<TModel>("Tenant id mismatch.", originationSource: ApplicationId);
             }
 
             var output = await TenantRepository.ExistsAsync(tenantId, cancellationToken);
             if (!output.IsSuccessful)
             {
-                return output.AsType<TModel>();
+                return output.AsOutput<TModel>();
             }
 
             output = await MutateModelAsync(tenantId, model, true, cancellationToken);
             if (!output.IsSuccessful)
             {
-                return output.AsType<TModel>();
+                return output.AsOutput<TModel>();
             }
 
             output = await ValidateForCreateAsync(tenantId, model, cancellationToken);
             if (!output.IsSuccessful)
             {
-                return output.AsType<TModel>();
+                return output.AsOutput<TModel>();
             }
 
             var createdOutput = await Repository.CreateAsync(tenantId, model, cancellationToken);
@@ -96,8 +96,8 @@ namespace OSK.Hexagonal.Abstractions.Services
                 return output;
             }
 
-            return output.Code.StatusCode == HttpStatusCode.NotFound
-                ? OutputFactory.Success() // if the id was not found, it was already successfully deleted
+            return output.StatusCode.SpecificityCode == OutputSpecificityCode.DataNotFound
+                ? OutputFactory.Succeed() // if the id was not found, it was already successfully deleted
                 : output;
         }
         
@@ -109,25 +109,25 @@ namespace OSK.Hexagonal.Abstractions.Services
             }
             if (!model.TenantId.Equals(tenantId))
             {
-                return OutputFactory.BadRequest<TModel>("Tenant id mismatch.", ApplicationId);
+                return OutputFactory.Fail<TModel>("Tenant id mismatch.", originationSource: ApplicationId);
             }
 
             var output = await TenantRepository.ExistsAsync(tenantId, cancellationToken);
             if (!output.IsSuccessful)
             {
-                return output.AsType<TModel>();
+                return output.AsOutput<TModel>();
             }
 
             output = await MutateModelAsync(tenantId, model, false, cancellationToken);
             if (!output.IsSuccessful)
             {
-                return output.AsType<TModel>();
+                return output.AsOutput<TModel>();
             }
 
             output = await ValidateForUpdateAsync(tenantId, model, cancellationToken);
             if (!output.IsSuccessful)
             {
-                return output.AsType<TModel>();
+                return output.AsOutput<TModel>();
             }
 
             var updatedOutput = await Repository.UpdateAsync(tenantId, model, cancellationToken);
@@ -146,22 +146,22 @@ namespace OSK.Hexagonal.Abstractions.Services
 
         protected virtual ValueTask<IOutput> MutateModelAsync(TTenantId tenantId, TModel model, bool isNewModel, CancellationToken cancellationToken)
         {
-            return new ValueTask<IOutput>(OutputFactory.Success());
+            return new ValueTask<IOutput>(OutputFactory.Succeed());
         }
 
         protected virtual ValueTask<IOutput> ValidateForCreateAsync(TTenantId tenantId, TModel model, CancellationToken cancellationToken)
         {
-            return new ValueTask<IOutput>(OutputFactory.Success());
+            return new ValueTask<IOutput>(OutputFactory.Succeed());
         }
 
         protected virtual ValueTask<IOutput> ValidateForUpdateAsync(TTenantId tenantId, TModel model, CancellationToken cancellationToken)
         {
-            return new ValueTask<IOutput>(OutputFactory.Success());
+            return new ValueTask<IOutput>(OutputFactory.Succeed());
         }
 
         protected virtual ValueTask<IOutput> ValidateForDeleteAsync(TTenantId tenantId, TId id, CancellationToken cancellationToken)
         {
-            return new ValueTask<IOutput>(OutputFactory.Success());
+            return new ValueTask<IOutput>(OutputFactory.Succeed());
         }
 
         protected virtual ValueTask ProcessResourceCreationAsync(TModel model, CancellationToken cancellationToken)
